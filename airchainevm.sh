@@ -1,8 +1,25 @@
 #!/bin/bash
 
-# 安装所需的软件包
+# 安装所需的软件包和 Go
 function install_dependencies() {
     dependencies=("build-essential" "git" "make" "jq" "curl" "clang" "pkg-config" "libssl-dev" "wget")
+
+    # 安装 Go
+    if ! command -v go &>/dev/null; then
+        echo "安装 Go..."
+        curl https://dl.google.com/go/go1.22.1.linux-amd64.tar.gz | sudo tar -C /usr/local -zxvf -
+        cat <<'EOF' >>$HOME/.bashrc
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export GO111MODULE=on
+export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
+EOF
+        source $HOME/.bashrc
+    else
+        echo "Go 已经安装，跳过安装步骤。"
+    fi
+
+    # 安装其它依赖软件包
     for dep in "${dependencies[@]}"; do
         if dpkg-query -W "$dep" >/dev/null 2>&1; then
             echo "$dep 已安装，跳过安装步骤。"
@@ -205,5 +222,6 @@ function main_menu() {
     done
 }
 
+# 安装依赖和进入主菜单
 install_dependencies
 main_menu
