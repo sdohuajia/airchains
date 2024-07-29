@@ -2,7 +2,10 @@
 
 # 安装所需的软件包和 Go
 function install_dependencies() {
-    dependencies=("build-essential" "git" "make" "jq" "curl" "clang" "pkg-config" "libssl-dev" "wget")
+    sudo apt-get update
+    sudo apt-get install -y jq build-essential
+
+    dependencies=("git" "make" "curl" "clang" "pkg-config" "libssl-dev" "wget")
 
     # 安装 Go
     if ! command -v go &>/dev/null; then
